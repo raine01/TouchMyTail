@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<TriggernometryExport Version="1">
+  <ExportedFolder Id="ffafe84a-62a0-44d3-91aa-0dfc8a8be920" Name="Touch my tail" Enabled="true">
+    <Folders />
+    <Triggers>
+      <Trigger Enabled="true" Name="in" Id="8ecf9291-fcfd-4864-b4ef-0222d9d57454" RegularExpression="^.{14} AddCombatant 03:[^:]*?:(?&lt;visiter&gt;[^:]*?)(:[^:]*?){5}:0:">
+        <Actions>
+          <Action OrderNumber="1" TextAuraFontSize="9" TextAuraFontName="宋体" Enabled="False" ActionType="SystemBeep">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+          <Action OrderNumber="2" ListVariableOp="Push" ListVariableName="player_list" ListVariableExpression="${visiter}" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="ListVariable">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+        </Actions>
+        <Condition Enabled="true" Grouping="And">
+          <ConditionSingle Enabled="true" ExpressionL="${lvar:player_list.indexof(${visiter})}" ExpressionTypeL="String" ExpressionR="^0$" ExpressionTypeR="String" ConditionType="RegexMatch" />
+          <ConditionSingle Enabled="true" ExpressionL="${visiter}" ExpressionTypeL="String" ExpressionR="^${_ffxivplayer}$" ExpressionTypeR="String" ConditionType="RegexNotMatch" />
+        </Condition>
+        <Conditions />
+      </Trigger>
+      <Trigger Enabled="true" Name="out" Id="81650547-f6a0-4818-9967-95f413789ce2" RegularExpression="^.{14} RemoveCombatant 04:[^:]*?:(?&lt;leaver&gt;[^:]*?)(:[^:]*?){5}:0:">
+        <Actions>
+          <Action OrderNumber="1" ListVariableOp="Remove" ListVariableName="player_list" ListVariableIndex="${lvar:player_list.indexof(${leaver})}" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="ListVariable">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+        </Actions>
+        <Condition Enabled="false" Grouping="Or" />
+        <Conditions />
+      </Trigger>
+      <Trigger Enabled="true" Name="gazeat" Id="48b02fad-6e7c-4a9a-adc6-3f362a0d1fc0" RegularExpression="^gazeat(?&lt;playername&gt;.*)$">
+        <Actions>
+          <Action OrderNumber="1" ListVariableOp="Push" ListVariableName="gazeat_list" ListVariableExpression="${playername}" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="ListVariable">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+          <Action OrderNumber="2" KeypressType="WindowMessage" KeyPressCode="122" KeyPressWindow="最终幻想XIV" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="KeyPress">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+        </Actions>
+        <Condition Enabled="true" Grouping="And">
+          <ConditionSingle Enabled="true" ExpressionL="${_ffxiventity[${playername}].targetid}" ExpressionTypeL="String" ExpressionR="^${_ffxivparty[1].id}$" ExpressionTypeR="String" ConditionType="RegexMatch" />
+          <ConditionSingle Enabled="true" ExpressionL="${lvar:gazeat_list.indexof(${playername})}" ExpressionTypeL="String" ExpressionR="^0$" ExpressionTypeR="String" ConditionType="RegexMatch" />
+          <ConditionSingle Enabled="false" ExpressionL="${_ffxiventity[${playername}].job}" ExpressionTypeL="String" ExpressionR="^$" ExpressionTypeR="String" ConditionType="RegexNotMatch" />
+        </Condition>
+        <Conditions />
+      </Trigger>
+      <Trigger Enabled="true" Name="remove" Id="02c82db8-8c27-4559-97ba-cd3a6faf4735" RegularExpression="^remove(?&lt;playername&gt;.*)$">
+        <Actions>
+          <Action OrderNumber="1" ListVariableOp="Remove" ListVariableName="gazeat_list" ListVariableIndex="${lvar:gazeat_list.indexof(${playername})}" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="ListVariable">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+        </Actions>
+        <Condition Enabled="true" Grouping="And">
+          <ConditionSingle Enabled="true" ExpressionL="${_ffxiventity[${playername}].targetid}" ExpressionTypeL="String" ExpressionR="^${_ffxivparty[1].id}$" ExpressionTypeR="String" ConditionType="RegexNotMatch" />
+        </Condition>
+        <Conditions />
+      </Trigger>
+      <Trigger Enabled="true" Name="member_iterator" Id="13b8dcf8-92c9-48a7-b926-a4cf7e6d6016" RegularExpression="^members(?&lt;index&gt;.*)$">
+        <Actions>
+          <Action OrderNumber="1" TextAuraFontSize="9" TextAuraFontName="宋体" TriggerId="13b8dcf8-92c9-48a7-b926-a4cf7e6d6016" TriggerText="members${numeric:${index}+1}" ActionType="Trigger">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+          <Action OrderNumber="2" TextAuraFontSize="9" TextAuraFontName="宋体" TriggerId="48b02fad-6e7c-4a9a-adc6-3f362a0d1fc0" TriggerText="gazeat${lvar:player_list[${index}]}" ActionType="Trigger">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+        </Actions>
+        <Condition Enabled="true" Grouping="And">
+          <ConditionSingle Enabled="true" ExpressionL="${index}" ExpressionTypeL="Numeric" ExpressionR="${lvar:player_list.size}" ExpressionTypeR="Numeric" ConditionType="NumericLessEqual" />
+        </Condition>
+        <Conditions />
+      </Trigger>
+      <Trigger Enabled="true" Name="gazeat_iterator" Id="bc5c9144-83d1-4071-b2eb-6b25e3f6be2a" RegularExpression="^gazeat(?&lt;index&gt;.*)$">
+        <Actions>
+          <Action OrderNumber="1" TextAuraFontSize="9" TextAuraFontName="宋体" TriggerId="bc5c9144-83d1-4071-b2eb-6b25e3f6be2a" TriggerText="gazeat${numeric:${index}+1}" ActionType="Trigger">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+          <Action OrderNumber="2" TextAuraFontSize="9" TextAuraFontName="宋体" TriggerId="02c82db8-8c27-4559-97ba-cd3a6faf4735" TriggerText="remove${lvar:gazeat_list[${index}]}" ActionType="Trigger">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+        </Actions>
+        <Condition Enabled="true" Grouping="And">
+          <ConditionSingle Enabled="true" ExpressionL="${index}" ExpressionTypeL="Numeric" ExpressionR="${lvar:gazeat_list.size}" ExpressionTypeR="Numeric" ConditionType="NumericLessEqual" />
+        </Condition>
+        <Conditions />
+      </Trigger>
+      <Trigger Enabled="true" Name="trigger" Id="51a94715-696e-4fed-8f87-2a329a7afa09" RegularExpression="." PrevActionsRefire="Deny" PeriodRefire="Deny" RefirePeriodExpression="999">
+        <Actions>
+          <Action OrderNumber="1" TextAuraFontSize="9" TextAuraFontName="宋体" TriggerId="13b8dcf8-92c9-48a7-b926-a4cf7e6d6016" TriggerText="members1" ActionType="Trigger">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+          <Action OrderNumber="2" TextAuraFontSize="9" TextAuraFontName="宋体" TriggerId="bc5c9144-83d1-4071-b2eb-6b25e3f6be2a" TriggerText="gazeat1" ActionType="Trigger">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+          <Action OrderNumber="3" TextAuraFontSize="9" TextAuraFontName="宋体" TriggerId="51a94715-696e-4fed-8f87-2a329a7afa09" TriggerText="龙尾轻摇" ActionType="Trigger" ExecutionDelayExpression="1000">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+        </Actions>
+        <Condition Enabled="false" Grouping="Or" />
+        <Conditions />
+      </Trigger>
+      <Trigger Enabled="true" Name="changeMap" Id="32eb5dc9-3ec3-426f-849f-863dcb02add3" RegularExpression="^.{14} ChangeMap">
+        <Actions>
+          <Action OrderNumber="1" ListVariableName="gazeat_list" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="ListVariable">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+          <Action OrderNumber="2" ListVariableName="player_list" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="ListVariable">
+            <Condition Enabled="false" Grouping="Or" />
+          </Action>
+        </Actions>
+        <Condition Enabled="false" Grouping="Or" />
+        <Conditions />
+      </Trigger>
+    </Triggers>
+  </ExportedFolder>
+</TriggernometryExport>
